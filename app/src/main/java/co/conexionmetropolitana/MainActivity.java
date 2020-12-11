@@ -22,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class MainActivity extends AppCompatActivity {
     /* Variable declaration */
     public ImageView imageView;
-    public static final String urlBase = "http://mitiendametropolitana.com/app";
+    public static final String urlBase = "http://conexionmetropolitana.co";
     public WebView webView;
     /* Start app */
     @Override
@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
 
-                /* Control de salida hacia redes sociales */
-                if(Uri.parse(url).getHost().endsWith("facebook.com")||Uri.parse(url).getHost().endsWith("instagram.com")||Uri.parse(url).getHost().endsWith("twitter.com")||Uri.parse(url).getHost().endsWith("wa.me")){
+                /* Control de salida hacia redes sociales y acopi, amva */
+                if(Uri.parse(url).getHost().endsWith("facebook.com")||Uri.parse(url).getHost().endsWith("instagram.com")||Uri.parse(url).getHost().endsWith("twitter.com")||Uri.parse(url).getHost().endsWith("wa.me")||Uri.parse(url).getHost().endsWith("acopiantioquia.org")||Uri.parse(url).getHost().endsWith("metropol.gov.co")){
                     confirmarSalir(view,url);
                 }
                 return true;
