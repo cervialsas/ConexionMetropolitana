@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -19,10 +20,12 @@ import android.widget.ImageView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.Console;
+
 public class MainActivity extends AppCompatActivity {
     /* Variable declaration */
     public ImageView imageView;
-    public static final String urlBase = "http://conexionmetropolitana.co";
+    public static final String urlBase = "http://conexionmetropolitana.co/node/4860";
     public WebView webView;
     /* Start app */
     @Override
@@ -34,19 +37,30 @@ public class MainActivity extends AppCompatActivity {
         webView = findViewById(R.id.web_view);
         //imageView.setVisibility(View.INVISIBLE);
         webView.setWebViewClient(new WebViewClient() {
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                /* Los dominios principales de esta app */
-                if(Uri.parse(url).getHost().endsWith("mitiendametropolitana.com")||Uri.parse(url).getHost().endsWith("cetiia.com.co")){
-                    imageView.setVisibility(View.VISIBLE);
-                    Snackbar.make(webView, "Cargando...", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    return false;
+                /* Sitio principal de las salas virtuales (BigBlueButton) */
+                if(Uri.parse(url).getHost().endsWith("salasvp.cetiia.com.co")){
+                    MainActivity.this.finish();//cerrar la app principal
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);//lanzar el navegador
+                }else{
+                    /* Los dominios principales de esta app */
+                    if(Uri.parse(url).getHost().endsWith("mitiendametropolitana.com")||Uri.parse(url).getHost().endsWith("cetiia.com.co")){
+                        imageView.setVisibility(View.VISIBLE);
+                        Snackbar.make(webView, "Cargando...", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                        return false;
+                    }else{
+                        /* Control de salida hacia redes sociales y acopi, amva */
+                        if(Uri.parse(url).getHost().endsWith("facebook.com")||Uri.parse(url).getHost().endsWith("instagram.com")||Uri.parse(url).getHost().endsWith("twitter.com")||Uri.parse(url).getHost().endsWith("wa.me")||Uri.parse(url).getHost().endsWith("acopiantioquia.org")||Uri.parse(url).getHost().endsWith("metropol.gov.co")){
+                            confirmarSalir(view,url);
+                        }
+                    }
                 }
 
-                /* Control de salida hacia redes sociales y acopi, amva */
-                if(Uri.parse(url).getHost().endsWith("facebook.com")||Uri.parse(url).getHost().endsWith("instagram.com")||Uri.parse(url).getHost().endsWith("twitter.com")||Uri.parse(url).getHost().endsWith("wa.me")||Uri.parse(url).getHost().endsWith("acopiantioquia.org")||Uri.parse(url).getHost().endsWith("metropol.gov.co")){
-                    confirmarSalir(view,url);
-                }
+
+
                 return true;
             }
             @Override
@@ -54,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setVisibility(View.INVISIBLE);
             }
         });
-        //webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
         Snackbar.make(webView, "Cargando...", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         webView.loadUrl(urlBase);
@@ -85,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Desea salir de la app?");
         builder.setPositiveButton("Salir", (dialog, which) -> {
             /* Se sale de la app */
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            view.getContext().startActivity(intent);
+
         });
         builder.setNegativeButton("Quedarme", (dialog, which) -> {
             /*  */
