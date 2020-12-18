@@ -25,7 +25,7 @@ import java.io.Console;
 public class MainActivity extends AppCompatActivity {
     /* Variable declaration */
     public ImageView imageView;
-    public static final String urlBase = "http://conexionmetropolitana.co/node/4860";
+    public static final String urlBase = "https://mitiendametropolitana.com/landingpages/app";
     public WebView webView;
     /* Start app */
     @Override
